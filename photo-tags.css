@@ -1,0 +1,52 @@
+.photo-tags {
+    display: inline-block;
+    position: relative;
+}
+
+/* Form */
+.photo-tags-form {
+    background: #fff;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 1;
+}
+.photo-tags-form-hide {
+    visibility: hidden;
+}
+.photo-tags-form button {
+    padding: 8px;
+    position: relative;
+    top: 1px;
+}
+
+/* Tag Item */
+.photo-tags-item {
+    -webkit-transition: opacity 0.7s;
+    border: solid 1px #fff;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.7s;
+    z-index: 0;
+}
+.photo-tags-item[data-url] {
+    cursor: pointer;
+}
+.photo-tags-item-label {
+    background: #fff;
+    border-bottom-right-radius: 4px;
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+}
+
+/* Tag Item - Hover/Active States */
+.photo-tags.photo-tags-active .photo-tags-item,
+.photo-tags:hover .photo-tags-item {
+    opacity: 0.5;
+}
+div.photo-tags-item-active,
+div.photo-tags .photo-tags-item:hover {
+    opacity: 1;
+}
