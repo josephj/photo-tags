@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Photo Tags</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/imgareaselect/0.9.10/css/imgareaselect-default.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/imgareaselect/0.9.10/css/imgareaselect-animated.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css" />
+    <link rel="stylesheet" href="demo.css" />
+    <style>
+    .photo-tags {
+        position: relative;
+        display: inline-block;
+    }
+    .photo-tags-form-hide {
+        visibility: hidden;
+    }
+    .photo-tags-form {
+        margin-top: 5px;
+        border-radius: 5px;
+        padding: 6px 10px;
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+    }
+    .photo-tags-form button {
+        padding: 8px;
+        position: relative;
+        top: 1px;
+    }
+    .photo-tags-item {
+        position: absolute;
+        z-index: 0;
+        border: solid 1px #fff;
+        opacity: 0;
+        -webkit-transition: opacity 0.7s;
+        transition: opacity 0.7s;
+    }
+    .photo-tags.photo-tags-active .photo-tags-item,
+    .photo-tags:hover .photo-tags-item {
+        opacity: 0.5;
+    }
+    div.photo-tags-item-active,
+    div.photo-tags .photo-tags-item:hover {
+        opacity: 1;
+    }
+    .photo-tags-label {
+        -webkit-font-smoothing: antialiased;
+        background: #fff;
+        font-size: 10px;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .photo-tags-item[data-url] {
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+
+    <h1>PhotoTags</h1>
+
+    <div class="photo-tags">
+        <img src="http://photos-a.ak.instagram.com/hphotos-ak-xaf1/10684164_775834509139760_1493619124_n.jpg" width="640" height="640">
+    </div>
+
+    <ul class="tags"></ul>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/imgareaselect/0.9.10/js/jquery.imgareaselect.min.js"></script>
+    <script src="demo.js"></script>
+    <script>
+    (function () {
+        var tags = [
+            {x: 300, y: 80, w: 300, h: 295, label: 'Andy', url: 'http://stackla.com'},
+            {x: 128, y: 258, w: 152,  h: 92, label: 'Mary', url: 'http://stackla.com'},
+            {x: 16, y: 358, w: 269,  h: 192, label: 'George', url: 'http://stackla.com'}
+        ];
+        var photoTags = (new PhotoTags('.photo-tags', {tags: tags}));
+        photoTags.render();
+
+        //
+        $.each(photoTags.tags, function () {
+            var tag = this;
+            $('.tags').append('<li><a href="javascript:void(0);" data-target="#' + tag.id.toLowerCase() + '">' + tag.label + '</a></li>');
+        });
+
+        $('.tags').on('mouseover', 'li a', function (e) {
+            var target = $(e.currentTarget).data('target');
+            console.log(target);
+            $(target).addClass('photo-tags-item-active');
+        });
+
+        $('.tags').on('mouseout', 'li a', function (e) {
+            var target = $(e.currentTarget).data('target');
+            $(target).removeClass('photo-tags-item-active');
+        });
+
+        $(".chosen-select").chosen({
+            placeholder: "Choose a tag...",
+            width: '150px'
+        });
+
+    }());
+    </script>
+
+</body>
+</html>
