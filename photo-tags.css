@@ -1,6 +1,7 @@
 .photo-tags {
     display: inline-block;
     position: relative;
+    cursor: crosshair;
 }
 
 /* Form */
