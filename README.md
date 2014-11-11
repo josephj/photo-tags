@@ -3,6 +3,8 @@ Photo Tags Utility
 
 A JavaScript photo tagging utility which allows you to choose multiple regions. 
 
+![Photo Tags Sample Image](http://d.pr/i/1cy3a)
+
 ```html
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/imgareaselect/0.9.10/css/imgareaselect-default.css" />
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/imgareaselect/0.9.10/css/imgareaselect-animated.css"/>
