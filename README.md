@@ -3,7 +3,7 @@ Photo Tags Utility
 
 A JavaScript photo tagging utility which allows you to choose multiple regions. 
 
-![http://lab.josephj.com/photo-tags/demo.html](http://lab.josephj.com/photo-tags/demo.html)
+Sample: [http://lab.josephj.com/photo-tags/demo.html](http://lab.josephj.com/photo-tags/demo.html)
 ![Photo Tags Sample Image](http://d.pr/i/1cy3a+)
 
 ```html
