@@ -231,10 +231,18 @@
         },
         // Append a tag
         appendTag: function (tag) {
+            try {
+
             var that = this,
                 $tag = $(Mustache.render(that.tagTemplate, tag)),
                 $label,
                 id = tag.id;
+
+            } catch (e) {
+                console.log(that.tagTemplate);
+                console.log(tag);
+                alert(e.message);
+            }
 
             that.log('appendTag() is executed');
 
@@ -355,7 +363,7 @@
             that.form = options.form || $(PhotoTags.FORM_TEMPLATE);
             that.imgAreaSelect = null;
             that.image = $image;
-            that.tagTemplate = options.tagTemplate || $(PhotoTags.TAG_TEMPLATE);
+            that.tagTemplate = options.tagTemplate || PhotoTags.TAG_TEMPLATE;
 
             that.naturalWidth = $image[0].naturalWidth || $image.data('max-width');
             that.naturalWidth = parseInt(that.naturalWidth, 10);

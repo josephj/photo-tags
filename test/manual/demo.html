@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>Photo Tags</title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/reset/reset-min.css" />
+    <link rel="stylesheet" href="../../vendor/HTML5-Reset/assets/css/reset.css" />
     <link rel="stylesheet" href="../../vendor/imgareaselect/distfiles/css/imgareaselect-default.css" />
     <link rel="stylesheet" href="../../vendor/imgareaselect/distfiles/css/imgareaselect-animated.css" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css" />
-    <link rel="stylesheet" href="photo-tags.css" />
+    <link rel="stylesheet" href="../../vendor/chosen/chosen.min.css" />
+    <link rel="stylesheet" href="../../src/photo-tags.css" />
     <style>
     body {
         font-family: Helvetica, sans-serif;
@@ -48,14 +48,15 @@
     <h1>Photo Tags</h1>
 
     <div class="photo-tags">
-        <img src="http://photos-a.ak.instagram.com/hphotos-ak-xaf1/10684164_775834509139760_1493619124_n.jpg" width="640" height="640">
+        <img src="parrots.jpg" width="640" height="640">
     </div>
 
     <ul class="tags"></ul>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+    <script src="../../vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../../vendor/chosen/chosen.jquery.min.js"></script>
     <script src="../../vendor/imgareaselect/jquery.imgareaselect.dev.js"></script>
+    <script src="../../vendor/mustache.js/mustache.js"></script>
     <script src="../../src/photo-tags.js"></script>
     <script>
     (function () {
@@ -64,7 +65,7 @@
             {x: 128, y: 258, w: 152,  h: 92, label: 'Mary', url: 'http://stackla.com'},
             {x: 16, y: 358, w: 269,  h: 192, label: 'George', url: 'http://stackla.com'}
         ];
-        var photoTags = new PhotoTags('.photo-tags', {tags: tags});
+        var photoTags = new Stackla.PhotoTags('.photo-tags', {tags: tags});
         photoTags.render();
 
         //
