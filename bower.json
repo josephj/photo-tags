@@ -1,0 +1,26 @@
+{
+  "name": "photo-tags",
+  "main": "photo-tags.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/josephj/photo-tags",
+  "authors": [
+    "josephj <josephj6802@gmail.com>"
+  ],
+  "description": "A JavaScript photo tagging utility which allows you to choose multiple regions.",
+  "keywords": [
+    "imgareaselect",
+    "jquery plugin",
+    "photo tagging"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "imgareaselect": "~0.9.10"
+  }
+}
