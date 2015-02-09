@@ -1,4 +1,4 @@
-/*global $, window */
+/*global $, window, document, Mustache */
 (function () {
 
     /**
@@ -7,8 +7,8 @@
      *
      *     new photoTags('.photo-wrapper', {
      *         tags: [
-     *             {x: 0, y: 0, width: 100, height: 200}
-     *             {x: 100, y: 100, width: 50, height: 100}
+     *             {x1: 0, y1: 0, width: 100, height: 200}
+     *             {x1: 100, y1: 100, width: 50, height: 100}
      *         ]
      *     });
      */
@@ -32,8 +32,35 @@
         },
         instance: true
     };
+    // Default form Mustache template
+    PhotoTags.FORM_TEMPLATE = [
+       '<form class="photo-tags-form photo-tags-form-hide">',
+       '     <input type="hidden" name="x1">',
+       '     <input type="hidden" name="y1">',
+       '     <input type="hidden" name="x2">',
+       '     <input type="hidden" name="y2">',
+       '     <input type="hidden" name="width">',
+       '     <input type="hidden" name="height">',
+       '     <label class="photo-tags-form-label">',
+       '         <select data-placeholder="Choose tags..." type="text" name="tag" class="photo-tags-form-input chosen-select">',
+       '             <option>Leo</option>',
+       '             <option>Jessica</option>',
+       '             <option>Henry</option>',
+       '         </select>',
+       '     </label>',
+       '     <button type="submit" class="photo-tags-form-button">Save</button>',
+       '     <button type="reset" class="photo-tags-form-button">Cancel</button>',
+       '</form>'
+    ].join('\n');
+    // Default selection Mustache template
+    PhotoTags.TAG_TEMPLATE = [
+        '<div class="photo-tags-item">',
+        '    <span class="photo-tags-item-remove"></span>',
+        '    <span class="photo-tags-item-label">{{label}}</span>',
+        '</div>'
+    ].join('\n');
     // Class or Selector prefix
-    PhotoTags.PREFIX = 'stacklapopup-shopspots-';
+    PhotoTags.PREFIX = 'photo-tags-';
     // Default selection selector
     PhotoTags.ITEM_SELECTOR = '.' + PhotoTags.PREFIX + 'item';
     // Default selection label selector
@@ -44,33 +71,6 @@
     PhotoTags.WRAPPER_CLASS = PhotoTags.PREFIX.slice(0, -1);
     // Disable class
     PhotoTags.DISABLED_CLASS = PhotoTags.PREFIX + 'disabled';
-    // Default form Mustache template
-    PhotoTags.FORM_TEMPLATE = [
-       '<form class="' + PhotoTags.PREFIX + 'form ' + PhotoTags.PREFIX + 'form-hide">',
-       '     <input type="hidden" name="x1">',
-       '     <input type="hidden" name="y1">',
-       '     <input type="hidden" name="x2">',
-       '     <input type="hidden" name="y2">',
-       '     <input type="hidden" name="width">',
-       '     <input type="hidden" name="height">',
-       '     <label class="' + PhotoTags.PREFIX + 'form-label">',
-       '         <select data-placeholder="Choose tags..." type="text" name="tag" class="' + PhotoTags.PREFIX + 'form-input chosen-select">',
-       '             <option>Leo</option>',
-       '             <option>Jessica</option>',
-       '             <option>Henry</option>',
-       '         </select>',
-       '     </label>',
-       '     <button type="submit" class="' + PhotoTags.PREFIX + 'form-button">Save</button>',
-       '     <button type="reset" class="' + PhotoTags.PREFIX + 'form-button">Cancel</button>',
-       '</form>'
-    ].join('\n');
-    // Default selection Mustache template
-    PhotoTags.TAG_TEMPLATE = [
-        '<div class="' + PhotoTags.PREFIX + 'item" id="{{id}}">',
-        '    <span class="' + PhotoTags.PREFIX + 'item-remove"></span>',
-        '    <span class="' + PhotoTags.PREFIX + 'item-label">{{label}}</span>',
-        '</div>'
-    ].join('\n');
 
     //==================
     // Public Methods
@@ -231,10 +231,8 @@
         },
         // Append a tag
         appendTag: function (tag) {
-
             var that = this,
-                html = Mustache.render(that.tagTemplate, tag),
-                $tag = $(html),
+                $tag = $(Mustache.render(that.tagTemplate, tag)),
                 $label,
                 id = tag.id;
 
@@ -294,6 +292,8 @@
             that.wrapper.removeClass(PhotoTags.PREFIX + 'active');
             that.form.addClass(PhotoTags.PREFIX + 'form-hide');
             that.imgAreaSelect.setOptions({hide: true});
+            // [STAC-4270] Clear selection manually.
+            $('.imgareaselect-outer').remove();
             that.imgAreaSelect.update();
         },
         enable: function () {
@@ -341,11 +341,6 @@
             var that = this,
                 $image = that.wrapper.find('img');
 
-            if (!$image.length) {
-                throw new Error('There is no image inside the wrapper!');
-                return;
-            }
-
             that.log('init() is executed');
 
             // Properties: wrapper, debug, form, offset, tags
@@ -360,7 +355,7 @@
             that.form = options.form || $(PhotoTags.FORM_TEMPLATE);
             that.imgAreaSelect = null;
             that.image = $image;
-            that.tagTemplate = options.tagTemplate || PhotoTags.TAG_TEMPLATE;
+            that.tagTemplate = options.tagTemplate || $(PhotoTags.TAG_TEMPLATE);
 
             that.naturalWidth = $image[0].naturalWidth || $image.data('max-width');
             that.naturalWidth = parseInt(that.naturalWidth, 10);
@@ -389,8 +384,8 @@
 
             that.log('bind() is executed');
 
-            $wrapper.on('click.phototags', PhotoTags.ITEM_SELECTOR, function (e) {that.onTagClick(e, $(e.currentTarget));});
-            $wrapper.on('click.phototags', PhotoTags.REMOVE_SELECTOR, function (e) {that.onTagOut($(e.currentTarget));});
+            $wrapper.on('click.phototags', PhotoTags.ITEM_SELECTOR, function (e) {that.onTagClick($(e.currentTarget));});
+            $wrapper.on('click.phototags', PhotoTags.REMOVE_SELECTOR, function (e) {e.stopPropagation();that.onTagOut($(e.currentTarget));});
             $wrapper.on('mouseenter.phototags', PhotoTags.ITEM_SELECTOR, function (e) {that.onTagOver($(e.currentTarget));});
             $wrapper.on('click.phototags', PhotoTags.REMOVE_SELECTOR, $.proxy(that.handleTagRemove, that));
             $form.on('submit', $.proxy(that.handleTagSave, that));
@@ -412,24 +407,24 @@
             $(document.body).append($form); // Escape from the mask overlays
             $form.css('zIndex', 2001); // FIXME
             // 2. Render imgAreaSelect
-            if (that.editable) {
-                options = $.extend({
-                    zIndex: 1043, // FIXME
-                    hide: (!that.enabled) ? true : false,
-                    disable: (!that.enabled) ? true : false,
-                    onSelectStart: $.proxy(that.handleSelectStart, that),
-                    onSelectEnd: $.proxy(that.handleSelectEnd, that)
-                }, PhotoTags.DEFAULT_SETTING);
-                that.imgAreaSelect = $wrapper.find('img').imgAreaSelect(options);
+            options = $.extend({
+                zIndex: 1043, // FIXME
+                hide: (!that.enabled) ? true : false,
+                disable: (!that.enabled) ? true : false,
+                onSelectStart: $.proxy(that.handleSelectStart, that),
+                onSelectEnd: $.proxy(that.handleSelectEnd, that)
+            }, PhotoTags.DEFAULT_SETTING);
+            // Hide the imgAreaSelect if the editable attribute being set to false
+            if (!that.editable) {
+                options.disable = true;
+                options.hide = true;
             }
+            that.imgAreaSelect = $wrapper.find('img').imgAreaSelect(options);
+
             // 3. Render exisiting tags/selections
             for (i in tags) {
                 if (tags.hasOwnProperty(i)) {
-                    try {
-                        that.appendTag(tags[i]);
-                    } catch (e) {
-                        console.error(e.message);
-                    }
+                    that.appendTag(tags[i]);
                 }
             }
             // 4. Add class to wrapper
@@ -451,19 +446,19 @@
                 .unbind('click.phototags')
                 .unbind('mouseenter.phototags')
                 .unbind('mouseleave.phototags');
-            if (that.imgAreaSelect) {
-                that.imgAreaSelect.setOptions({remove: true});
-                that.imgAreaSelect.update();
-            }
-            if (that.form) {
-                that.form.remove();
-            }
+            that.imgAreaSelect.setOptions({remove: true});
+            that.imgAreaSelect.update();
+            that.form.remove();
+            that.wrapper.find(PhotoTags.ITEM_SELECTOR).remove();
             that = null;
         }
     };
     $.extend(PhotoTags.prototype, proto);
 
     // Promote to global
-    window.PhotoTags = PhotoTags;
+    if (!window.Stackla) {
+        window.Stackla = {};
+    }
+    window.Stackla.PhotoTags = PhotoTags;
 
 }());
